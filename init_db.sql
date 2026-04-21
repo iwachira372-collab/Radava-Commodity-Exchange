@@ -1,0 +1,89 @@
+-- Create the radava database
+CREATE DATABASE IF NOT EXISTS radava;
+USE radava;
+
+-- Users table
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  firstName VARCHAR(100) NOT NULL,
+  lastName VARCHAR(100) NOT NULL,
+  phone VARCHAR(20) UNIQUE NOT NULL,
+  email VARCHAR(100) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  status INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- User bio table
+CREATE TABLE IF NOT EXISTS userbio (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userid INT NOT NULL,
+  address VARCHAR(255),
+  occupation VARCHAR(100),
+  nextofkin VARCHAR(100),
+  k_phone VARCHAR(20),
+  k_relationship VARCHAR(100),
+  k_address VARCHAR(255),
+  kra_pin VARCHAR(50),
+  identification_card VARCHAR(255),
+  status INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+-- Bank details table
+CREATE TABLE IF NOT EXISTS bankdetails (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userid INT NOT NULL,
+  bank VARCHAR(100),
+  account_number VARCHAR(50),
+  account_name VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+-- Orders table
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userid INT NOT NULL,
+  type VARCHAR(10),
+  product VARCHAR(100),
+  quantity DECIMAL(10,2),
+  price DECIMAL(10,2),
+  total DECIMAL(12,2),
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+-- Portfolio table
+CREATE TABLE IF NOT EXISTS portfolio (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  product_name VARCHAR(100) NOT NULL,
+  description TEXT,
+  buy_price DECIMAL(10,2),
+  sell_price DECIMAL(10,2),
+  quantity DECIMAL(10,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Withdrawals table
+CREATE TABLE IF NOT EXISTS withdrawals (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userid INT NOT NULL,
+  amount DECIMAL(12,2),
+  status VARCHAR(20) DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (userid) REFERENCES users(id)
+);
+
+-- Insert test user (password: password123)
+INSERT INTO users (firstName, lastName, phone, email, password, status) 
+VALUES ('Test', 'User', '+254712345678', 'test@test.com', '$2b$10$K0L0aXPrWRdCY7E7vM3F5.2rW7s7Z1K8L9M0N1O2P3Q4R5S6T7U8V', 0)
+ON DUPLICATE KEY UPDATE id=id;
