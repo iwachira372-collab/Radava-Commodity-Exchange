@@ -15,6 +15,17 @@ const options = {
 app.use(cors(options))
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 app.use('/public',express.static('public'))
+app.get('/', (req, res) => {
+  res.send({
+    status: 'ok',
+    service: 'radava-exchange-api',
+    message: 'API is running. Use /api/* and /admin/* endpoints.'
+  })
+})
+
+app.get('/health', (req, res) => {
+  res.send({ status: 'ok' })
+})
 createRoutes(app)
 
 // if(cluster.isPrimary){

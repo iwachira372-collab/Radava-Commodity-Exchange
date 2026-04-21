@@ -38,8 +38,8 @@ const { withdraw, updatewithdrawal, getwithdrawal, getCounts, getwithdrawalBySta
     app.post('/api/verifyotp',verifyotp)
     app.post('/api/savehash',savehash)
     app.post('/api/savepassword',savepassword)
-    app.get('/api/user/demo', createDemoAccount)
-    app.post('/api/user/demo', fundDemoAccount)
+    app.get('/api/user/demo', middleware, createDemoAccount)
+    app.post('/api/user/demo', middleware, fundDemoAccount)
 
      // orders
      app.post('/api/order/create/buy',middleware, createBuyOrder)
