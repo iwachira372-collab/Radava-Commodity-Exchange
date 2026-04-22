@@ -15,20 +15,17 @@ const mysql = require('mysql')
 //   password : 'nEx]a$!FR#4p',
 //   database : 'radavaco_api'
 // })
-module.exports.pool = mysql.createPool({
-   connectionLimit : 100,
-   host     : 'localhost',
-   user     : 'root',
-   password : '',
-   database : 'radava'
- })
- const pool = mysql.createPool({
-   connectionLimit : 100,
-   host     : 'localhost',
-   user     : 'root',
-   password : '',
-   database : 'radava'
- })
+const dbConfig = {
+   connectionLimit : Number(process.env.DB_CONNECTION_LIMIT || 100),
+   host     : process.env.DB_HOST || 'localhost',
+   user     : process.env.DB_USER || 'root',
+   password : process.env.DB_PASSWORD || '',
+   database : process.env.DB_NAME || 'radava',
+   port     : Number(process.env.DB_PORT || 3306)
+}
+
+module.exports.pool = mysql.createPool(dbConfig)
+const pool = mysql.createPool(dbConfig)
 
 module.exports.save = async (sql,data=[])=>{
     return await new Promise((resolve, reject)=>{
