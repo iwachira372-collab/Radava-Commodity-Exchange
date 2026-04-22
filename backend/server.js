@@ -3,6 +3,7 @@ const cors = require("cors")
 const cluster = require("cluster")
 const helmet = require("helmet")
 const os = require("os")
+const path = require("path")
 const {createRoutes}  = require("./src/routes/router")
 const bodyParser = require("body-parser")
 
@@ -15,18 +16,17 @@ const options = {
 app.use(cors(options))
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 app.use('/public',express.static('public'))
-app.get('/', (req, res) => {
-  res.send({
-    status: 'ok',
-    service: 'radava-exchange-api',
-    message: 'API is running. Use /api/* and /admin/* endpoints.'
-  })
-})
-
 app.get('/health', (req, res) => {
   res.send({ status: 'ok' })
 })
 createRoutes(app)
+app.use(express.static(path.join(__dirname, "../client/build")))
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api/") || req.path.startsWith("/admin/") || req.path === "/callback") {
+    return res.status(404).json({ error: "404 not found" })
+  }
+  return res.sendFile(path.join(__dirname, "../client/build", "index.html"))
+})
 
 // if(cluster.isPrimary){
 //   const cpus = os.cpus().length

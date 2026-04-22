@@ -95,11 +95,5 @@ const { withdraw, updatewithdrawal, getwithdrawal, getCounts, getwithdrawalBySta
 
     // admin counts
     app.get('/admin/counts',adminmiddleware,getCounts)
-
-    
-    
-    app.all('*',(req,res)=>{
-        res.send({error:'404 not found'})
-      })
   }
   
