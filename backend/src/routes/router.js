@@ -13,14 +13,14 @@ const { withdraw, updatewithdrawal, getwithdrawal, getCounts, getwithdrawalBySta
   module.exports.createRoutes = (app)=>{
     app.get('/api/verify',middleware, async (req,res)=>{
         try {
-          const bio = await fetch('SELECT userid, status FROM `userbio` WHERE `userid` = ?',[req.user.id])
-          const bank = await fetch('SELECT userid FROM `bankdetails` WHERE `userid` = ?',[req.user.id])
+          const bio = await fetch('SELECT userid, status FROM "userbio" WHERE "userid" = $1',[req.user.id])
+          const bank = await fetch('SELECT userid FROM "bankdetails" WHERE "userid" = $1',[req.user.id])
           let step = 0
           if(bank?.length == 0) step = 3
           if(bio?.length == 0) step = 2
           let kyc = false
           if(bio?.length > 0){
-            if(bio[0].status==1) kyc = true
+            if(bio[0].status === 1) kyc = true
           }
 
           res.send({user:{...req.user,step,kyc}})
